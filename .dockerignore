@@ -1,0 +1,16 @@
+node_modules
+dist
+npm-debug.log
+pnpm-debug.log
+.git
+.gitignore
+.env
+.env.*
+!.env.production
+README.md
+test
+coverage
+.vscode
+.idea
+*.md
+!QUICK_START.md

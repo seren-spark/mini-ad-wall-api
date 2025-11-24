@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  # MySQL 数据库服务
+  db:
+    image: mysql:8.0
+    container_name: mini-ad-wall-mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: ad_wall
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 123456
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # NestJS 应用服务
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mini-ad-wall-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USERNAME: admin
+      DB_PASSWORD: 123456
+      DB_DATABASE: ad_wall
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+    command: sh -c "sleep 5 && pnpm run migration:run && node dist/main"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
