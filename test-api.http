@@ -1,0 +1,77 @@
+### 测试 Mini Ad Wall API
+### 请确保服务已启动在 http://localhost:3000 或 http://localhost:3001
+
+@baseUrl = http://localhost:3001
+
+### 1. 查询广告列表（初始为空）
+GET {{baseUrl}}/ads
+
+### 2. 创建第一个广告
+POST {{baseUrl}}/ads
+Content-Type: application/json
+
+{
+  "title": "超值优惠广告",
+  "imageUrl": "https://picsum.photos/400/300?random=1",
+  "landingUrl": "https://example.com/promo1",
+  "bid": 150
+}
+
+### 3. 创建第二个广告（更高出价）
+POST {{baseUrl}}/ads
+Content-Type: application/json
+
+{
+  "title": "热门产品推荐",
+  "imageUrl": "https://picsum.photos/400/300?random=2",
+  "landingUrl": "https://example.com/promo2",
+  "bid": 200
+}
+
+### 4. 创建第三个广告（较低出价）
+POST {{baseUrl}}/ads
+Content-Type: application/json
+
+{
+  "title": "新品上市",
+  "imageUrl": "https://picsum.photos/400/300?random=3",
+  "landingUrl": "https://example.com/promo3",
+  "bid": 100
+}
+
+### 5. 查询广告列表（应按 bid 降序：200, 150, 100）
+GET {{baseUrl}}/ads
+
+### 6. 编辑广告（替换为实际的广告ID）
+PATCH {{baseUrl}}/ads/YOUR_AD_ID_HERE
+Content-Type: application/json
+
+{
+  "title": "更新后的标题",
+  "bid": 250
+}
+
+### 7. 点击广告（替换为实际的广告ID）
+POST {{baseUrl}}/ads/YOUR_AD_ID_HERE/click
+
+### 8. 删除广告（替换为实际的广告ID）
+DELETE {{baseUrl}}/ads/YOUR_AD_ID_HERE
+
+### 9. 测试校验 - 缺少必填字段（应返回 400）
+POST {{baseUrl}}/ads
+Content-Type: application/json
+
+{
+  "title": "测试广告"
+}
+
+### 10. 测试校验 - bid 为负数（应返回 400）
+POST {{baseUrl}}/ads
+Content-Type: application/json
+
+{
+  "title": "测试广告",
+  "imageUrl": "https://example.com/image.jpg",
+  "landingUrl": "https://example.com",
+  "bid": -10
+}
