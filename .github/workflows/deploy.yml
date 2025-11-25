@@ -1,0 +1,38 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main  # 推送到 main 分支时触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.DEPLOY_PATH }}
+            echo "=== Pulling latest code ==="
+            git pull origin main
+            
+            echo "=== Rebuilding and restarting containers ==="
+            docker-compose down
+            docker-compose up --build -d
+            
+            echo "=== Checking container status ==="
+            docker ps | grep mini-ad-wall
+            
+            echo "=== Showing recent logs ==="
+            docker logs --tail 30 mini-ad-wall-api
+            
+            echo "=== Deployment completed ==="
