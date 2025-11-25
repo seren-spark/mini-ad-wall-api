@@ -56,7 +56,8 @@ export class AdsController {
     return { success: true };
   }
 
-  @Post(':id/click')
+  @Post('click/:id')
+  @ApiOperation({summary:'点击广告'})
   async click(@Param('id') id: string): Promise<Ad> {
     return this.adsService.click(id);
   }
