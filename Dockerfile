@@ -1,5 +1,5 @@
 # 构建阶段
-FROM docker.m.daocloud.io/library/node:18-alpine AS builder
+FROM docker.m.daocloud.io/library/node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY . .
 RUN pnpm run build
 
 # 运行阶段
-FROM docker.m.daocloud.io/library/node:18-alpine 
+FROM docker.m.daocloud.io/library/node:20-alpine 
 
 WORKDIR /app
 
