@@ -1,55 +1,102 @@
-<!--
- * @Author: serendipity 2843306836@qq.com
- * @Date: 2025-11-26 20:43:11
- * @LastEditors: serendipity 2843306836@qq.com
- * @LastEditTime: 2025-11-26 20:45:12
- * @FilePath: \mini-ad-wall-web\src\App.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref, reactive } from 'vue'
+import AdCard from '@/components/AdCard.vue'
+import AdDialog from '@/components/AdDialog.vue'
+
+interface Ad {
+  id: number
+  title: string
+  content: string
+  heat: number
+  price: number
+}
+
+const ads = ref<Ad[]>([
+  {
+    id: 1,
+    title: '我是标题1',
+    content: '测试测试',
+    heat: 0,
+    price: 123,
+  },
+  {
+    id: 2,
+    title: '广告标题2',
+    content: '123123',
+    heat: 0,
+    price: 100,
+  },
+  {
+    id: 3,
+    title: '广告标题3',
+    content: '我是内容',
+    heat: 0,
+    price: 3,
+  },
+])
+
+const dialogVisible = ref(false)
+const form = reactive({
+  title: '',
+  publisher: '',
+  content: '',
+  landingPage: '',
+  price: 0.0,
+})
+
+const handleCreate = () => {
+  dialogVisible.value = false
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div class="min-h-screen bg-[#F5F7FA] font-sans text-gray-900">
+    <!-- Header -->
+    <header class="bg-white h-16 px-6 flex items-center shadow-sm sticky top-0 z-10">
+      <div class="font-bold text-lg">Mini广告墙</div>
+    </header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+    <!-- Main Content -->
+    <main class="p-6 max-w-[1600px] mx-auto w-full">
+      <!-- Action Bar -->
+      <div class="mb-6">
+        <button
+          @click="dialogVisible = true"
+          class="bg-[#3B82F6] hover:bg-blue-600 text-white px-4 py-2 rounded-sm flex items-center gap-1 text-sm transition-colors cursor-pointer shadow-sm"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="M12 5v14" />
+          </svg>
+          新增广告
+        </button>
+      </div>
 
-  <main>
-    <h1 class="text-3xl font-bold underline">Hello world!</h1>
-  </main>
+      <!-- Ad Grid -->
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          v-for="ad in ads"
+          :key="ad.id"
+          class="bg-white rounded-lg p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+        >
+          <AdCard :content="ad.content" :title="ad.title" :price="ad.price" :heat="ad.heat" />
+        </div>
+      </div>
+
+      <!-- Create Ad Dialog -->
+      <AdDialog :form="form" v-model="dialogVisible" @create="handleCreate" />
+    </main>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+<style scoped lang="scss"></style>
