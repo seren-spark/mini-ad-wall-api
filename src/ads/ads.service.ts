@@ -1,3 +1,11 @@
+/*
+ * @Author: serendipity 2843306836@qq.com
+ * @Date: 2025-11-23 21:13:11
+ * @LastEditors: serendipity 2843306836@qq.com
+ * @LastEditTime: 2025-11-27 15:22:12
+ * @FilePath: \mini-ad-wall-api\src\ads\ads.service.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import {
   Injectable,
   NotFoundException,
