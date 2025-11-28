@@ -48,7 +48,15 @@ services:
     networks:
       - app-network
     command: sh -c "sleep 5 && pnpm run migration:run && node dist/main"
-
+  
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: always
+    ports:
+      - "8888:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 networks:
   app-network:
     driver: bridge
