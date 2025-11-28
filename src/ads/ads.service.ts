@@ -1,15 +1,8 @@
-/*
- * @Author: serendipity 2843306836@qq.com
- * @Date: 2025-11-23 21:13:11
- * @LastEditors: serendipity 2843306836@qq.com
- * @LastEditTime: 2025-11-27 15:22:12
- * @FilePath: \mini-ad-wall-api\src\ads\ads.service.ts
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,6 +12,8 @@ import { UpdateAdDto } from './dto/update-ad.dto';
 
 @Injectable()
 export class AdsService {
+  // 使用 NestJS 内置 Logger，会自动使用 Winston
+  private readonly logger = new Logger(AdsService.name);
   constructor(
     @InjectRepository(Ad)
     private readonly adRepository: Repository<Ad>,
@@ -39,18 +34,37 @@ export class AdsService {
     });
   }
   async create(dto: CreateAdDto): Promise<Ad> {
-    const ad = this.adRepository.create({
-      id: this.genId(),
-      title: dto.title.trim(),
-      author: dto.author.trim(),
-      content: dto.content.trim(),
-      landingUrl: dto.landingUrl.trim(),
-      bid: Number(dto.bid),
-      clicks: 0,
-      status: 1,
-    });
+    this.logger.log(`Creating ad: ${dto.title}`);
+    // const ad = this.adRepository.create({
+    //   id: this.genId(),
+    //   title: dto.title.trim(),
+    //   author: dto.author.trim(),
+    //   content: dto.content.trim(),
+    //   landingUrl: dto.landingUrl.trim(),
+    //   bid: Number(dto.bid),
+    //   clicks: 0,
+    //   status: 1,
+    // });
 
-    return this.adRepository.save(ad);
+    try {
+      const ad = this.adRepository.create({
+        id: this.genId(),
+        title: dto.title.trim(),
+        author: dto.author.trim(),
+        content: dto.content.trim(),
+        landingUrl: dto.landingUrl.trim(),
+        bid: Number(dto.bid),
+        clicks: 0,
+        status: 1,
+      });
+
+      const result = await this.adRepository.save(ad);
+      this.logger.log(`Ad created successfully: ${result.id}`);
+      return result;
+    } catch (error) {
+      this.logger.error(`Failed to create ad: ${error.message}`, error.stack);
+      throw error;
+    }
   }
   async update(id: string, dto: UpdateAdDto): Promise<Ad> {
     if (!id) throw new BadRequestException('id is required');

@@ -1,17 +1,28 @@
-import { Module } from '@nestjs/common';
+/*
+ * @Author: serendipity 2843306836@qq.com
+ * @Date: 2025-11-23 20:58:52
+ * @LastEditors: serendipity 2843306836@qq.com
+ * @LastEditTime: 2025-11-28 15:41:13
+ * @FilePath: \mini-ad-wall-api\src\app.module.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AdsModule } from './ads/ads.module';
 import { Ad } from './ads/entities/ad.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from './common/logger/winston.config';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
     }),
+    WinstonModule.forRoot(winstonConfig),
     // TypeOrmModule.forRoot({
     //   type: 'mysql',
     //   host: process.env.DB_HOST || 'localhost',
@@ -56,4 +67,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

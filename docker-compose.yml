@@ -29,9 +29,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: mini-ad-wall-api
-    restart: always
     ports:
       - "3000:3000"
+    volumes:
+      - ./logs:/app/logs
+    restart: always
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -41,7 +43,7 @@ services:
       DB_PASSWORD: 123456
       DB_DATABASE: ad_wall
     depends_on:
-      db:
+      db: 
         condition: service_healthy
     networks:
       - app-network
