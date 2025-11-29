@@ -18,7 +18,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: 'mini-ad-wall',//服务器路径
+  base: '/mini-ad-wall/',//服务器路径
   plugins: [
     tailwindcss(),
     vue(),
