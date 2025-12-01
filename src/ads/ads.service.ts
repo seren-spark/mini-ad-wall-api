@@ -29,14 +29,22 @@ export class AdsService {
     ).toLowerCase();
   }
 
+  // async list(): Promise<Ad[]> {
+  //   return this.adRepository.find({
+  //     where: { status: 1 }, // 只查询启用的广告
+  //     order: {
+  //       bid: 'DESC', // 竞价降序
+  //       updatedAt: 'DESC', // 更新时间降序
+  //     },
+  //   });
+  // }
   async list(): Promise<Ad[]> {
-    return this.adRepository.find({
-      where: { status: 1 }, // 只查询启用的广告
-      order: {
-        bid: 'DESC', // 竞价降序
-        updatedAt: 'DESC', // 更新时间降序
-      },
-    });
+    return this.adRepository
+      .createQueryBuilder('a')
+      .where('a.status = :status', { status: 1 }) // 只查询启用的广告
+      .orderBy('a.bid + (a.bid * a.clicks * 0.42)', 'DESC') // 竞价排序逻辑
+      .addOrderBy('a.updatedAt', 'DESC') // 更新时间降序作为次要排序
+      .getMany();
   }
   async create(dto: CreateAdDto): Promise<Ad> {
     this.logger.log(`Creating ad: ${dto.title}`);
