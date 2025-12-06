@@ -150,7 +150,5 @@ pnpm migration:revert   # 回滚迁移
 
 ---
 
-如果你希望 README 也包含 Docker / docker-compose 的使用说明，我可以再基于项目里的 [Dockerfile](cci:7://file:///e:/Mini-Ad-Wall/mini-ad-wall-api/Dockerfile:0:0-0:0) 和 [docker-compose.yml](cci:7://file:///e:/Mini-Ad-Wall/mini-ad-wall-api/docker-compose.yml:0:0-0:0) 给你补一节「使用 Docker 部署」。`<p align="center">`
-  `<a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />``</a>`
 
 </p>
