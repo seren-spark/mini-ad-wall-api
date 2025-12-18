@@ -29,15 +29,6 @@ export class AdsService {
     ).toLowerCase();
   }
 
-  // async list(): Promise<Ad[]> {
-  //   return this.adRepository.find({
-  //     where: { status: 1 }, // 只查询启用的广告
-  //     order: {
-  //       bid: 'DESC', // 竞价降序
-  //       updatedAt: 'DESC', // 更新时间降序
-  //     },
-  //   });
-  // }
   async list(): Promise<Ad[]> {
     return this.adRepository
       .createQueryBuilder('a')
@@ -78,11 +69,19 @@ export class AdsService {
     if (!ad) throw new NotFoundException('Ad not found');
 
     // 更新字段
-    if (dto.title !== undefined) ad.title = dto.title.trim();
-    if (dto.author !== undefined) ad.author = dto.author.trim();
-    if (dto.content !== undefined) ad.content = dto.content.trim();
-    if (dto.landingUrl !== undefined) ad.landingUrl = dto.landingUrl.trim();
-    if (dto.bid !== undefined) ad.bid = Number(dto.bid);
+    const fieldMap: Record<string, (v: any) => any> = {
+      title: (v) => v.trim(),
+      author: (v) => v.trim(),
+      content: (v) => v.trim(),
+      landingUrl: (v) => v.trim(),
+      bid: (v) => Number(v),
+    };
+
+    for (const key in fieldMap) {
+      if (dto[key] !== undefined) {
+        ad[key] = fieldMap[key](dto[key]);
+      }
+    }
 
     return this.adRepository.save(ad);
   }

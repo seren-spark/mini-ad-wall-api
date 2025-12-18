@@ -15,34 +15,19 @@ const logFormat = winston.format.printf(
 export const winstonConfig = {
   format: winston.format.combine(
     winston.format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss', // 格式化时间
-    }), //添加时间戳
-    // winston.format.json()
+      format: 'YYYY-MM-DD HH:mm:ss',
+    }), 
     winston.format.errors({ stack: true }),
     logFormat,
-    // winston.format.colorize(),
   ),
   transports: [
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-
         logFormat,
       ),
     }),
-
-    // //   所有日志写入文件
-    // new winston.transports.File({
-    //   filename: path.join(process.cwd(), 'logs', 'app.log'),
-    // }),
-
-    // //   错误日志写入eoor
-    // new winston.transports.File({
-    //   filename: path.join(process.cwd(), 'logs', 'error.log'),
-    //   level: 'error', // 只记录错误
-    // }),
-
     new winston.transports.DailyRotateFile({
       dirname: path.join(process.cwd(), 'logs'),
       filename: 'application-%DATE%.log',

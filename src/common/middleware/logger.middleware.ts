@@ -2,16 +2,12 @@ import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import * as winston from 'winston';
 
-import { winstonConfig } from '../logger/winston.config';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston/dist/winston.constants';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-//   private logger: winston.Logger;
 
-//   constructor() {
-//     this.logger = winston.createLogger(winstonConfig);
-//   }
+  // 注入
  constructor(
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: winston.Logger,
   ) {}

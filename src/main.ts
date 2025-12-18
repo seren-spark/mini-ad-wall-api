@@ -16,11 +16,7 @@ import { AllExceptionFilter } from './common/filters/all-exception.filter';
 import { TransformInterceptors } from './common/interceptors/transform.interceptor';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // 全局异常过滤器（捕获所有异常）
   app.useGlobalFilters(new AllExceptionFilter());
-
-  // 全局响应拦截器（统一成功响应格式）
   app.useGlobalInterceptors(new TransformInterceptors());
   const config = new DocumentBuilder()
     .setTitle('mini 广告墙')
@@ -39,7 +35,6 @@ async function bootstrap() {
     }),
   );
 
-  // 挂载 Swagger UI
   SwaggerModule.setup('swagger', app, document);
   app.enableCors({ origin: true, credentials: true });
   await app.listen(process.env.PORT ?? 3000);
