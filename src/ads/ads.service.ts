@@ -48,17 +48,6 @@ export class AdsService {
   }
   async create(dto: CreateAdDto): Promise<Ad> {
     this.logger.log(`Creating ad: ${dto.title}`);
-    // const ad = this.adRepository.create({
-    //   id: this.genId(),
-    //   title: dto.title.trim(),
-    //   author: dto.author.trim(),
-    //   content: dto.content.trim(),
-    //   landingUrl: dto.landingUrl.trim(),
-    //   bid: Number(dto.bid),
-    //   clicks: 0,
-    //   status: 1,
-    // });
-
     try {
       const ad = this.adRepository.create({
         id: this.genId(),
